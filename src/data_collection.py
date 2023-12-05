@@ -29,7 +29,7 @@ class ApiFetch:
         return response.json()
 
     def fetch_match_data(self, match_id):
-        url = f'{self.URL}/lol/match/v5/matches/{match_id}&api_key={self.apiKey}'
+        url = f'{self.URL}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
         response = requests.get(url)
         time.sleep(1)
         return response.json()
