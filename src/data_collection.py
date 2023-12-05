@@ -1,6 +1,5 @@
 import requests
 import time
-import pandas as pd
 
 class ApiFetch:
     URL = "https://americas.api.riotgames.com"
@@ -12,21 +11,19 @@ class ApiFetch:
         self.summoner_id = self.fetch_summoner_id()
     
     def fetch_summoner_id(self):
-        url = f'{self.URL}/riot/account/v1/accounts/by-riot-id/{self.summoner_nick}/{self.summoner_tag}&api_key={self.apiKey}'
+        url = f'{self.URL}/riot/account/v1/accounts/by-riot-id/{self.summoner_nick}/{self.summoner_tag}?api_key={self.apiKey}'
         response = requests.get(url)
         time.sleep(1)
-        self.summmoner_id = response
-
+        return response.json()['puuid']
 
     def fetch_match_id(self, count=10) -> list:
         url = f'{self.URL}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
         response = requests.get(url)
         time.sleep(1)
-        print(response)
         return response.json()
 
     def fetch_match_data(self, match_id):
-        url = f'{self.URL}/lol/match/v5/matches/{match_id}&api_key={self.apiKey}'
+        url = f'{self.URL}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
         response = requests.get(url)
         time.sleep(1)
         return response.json()

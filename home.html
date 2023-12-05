@@ -9,7 +9,13 @@
         <p>Match Duration: {{ match.match_duration }}</p>
         <p>Game Mode: {{ match.game_mode }}</p>
         <p>Game Version: {{ match.game_version }}</p>
-        <p>Participants: {{ match.participants }}</p>
+        
+        <h3>Participants:</h3>
+        <ul>
+            {% for participant in match.participants %}
+                <li>Summoner Name: {{ participant.summoner_name }}, Kills: {{ participant.kills }}, Deaths: {{ participant.deaths }}, Assists: {{ participant.assists }}, Vision Score: {{ participant.vision_score }}, Champion: {{ participant.champion_name }}, Role: {{ participant.role }}, Level: {{ participant.level }}, Total Damage: {{ participant.totalDamage }}</li>
+            {% endfor %}
+        </ul>
     {% endfor %}
 </body>
 </html>
