@@ -4,12 +4,10 @@
     <title>Match Statistics</title>
 </head>
 <body>
-    {% for match in matches %}
-        <h2>Match ID: {{ match.match_id }}</h2>
+        <h2>Match ID: {{ match }}</h2>
         <p>Match Duration: {{ match.match_duration }}</p>
         <p>Game Mode: {{ match.game_mode }}</p>
         <p>Game Version: {{ match.game_version }}</p>
         <p>Participants: {{ match.participants }}</p>
-    {% endfor %}
 </body>
 </html>

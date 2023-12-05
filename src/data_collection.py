@@ -5,24 +5,27 @@ import pandas as pd
 class ApiFetch:
     URL = "https://americas.api.riotgames.com"
 
-    def __init__(self, apiKey, summonerNick, summonerTag) -> None:
+    def __init__(self, apiKey, summonerNick, summonerTag, puuid=None) -> None:
         self.apiKey = apiKey
         self.summoner_nick = summonerNick
         self.summoner_tag = summonerTag
-        self.summoner_id = self.fetch_summoner_id()
+        self.summoner_id = puuid
     
     def fetch_summoner_id(self):
-        url = f'{self.URL}/riot/account/v1/accounts/by-riot-id/{self.summoner_nick}/{self.summoner_tag}&api_key={self.apiKey}'
+        url = f'{self.URL}/riot/account/v1/accounts/by-riot-id/{self.summoner_nick}/{self.summoner_tag}?api_key={self.apiKey}'
         response = requests.get(url)
+        response = response.json()
+        print(response)
         time.sleep(1)
-        self.summmoner_id = response
+        self.summoner_id = response['puuid']
 
 
     def fetch_match_id(self, count=10) -> list:
         url = f'{self.URL}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
         response = requests.get(url)
         time.sleep(1)
-        print(response)
+        print(url)
+        print(response.json())
         return response.json()
 
     def fetch_match_data(self, match_id):
@@ -57,3 +60,5 @@ class Participants(Match):
         self.totalDamage = None
     
     
+match = ApiFetch("RGAPI-0a0dfc77-970e-45ad-8ecf-63037fa1b2d6","suzuhatitor", "psyko","")
+match.fetch_match_id()
