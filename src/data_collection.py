@@ -1,5 +1,6 @@
 import requests
 import time
+import pandas as pd
 
 class ApiFetch:
     URL = "https://americas.api.riotgames.com"
@@ -21,22 +22,31 @@ class ApiFetch:
         url = f'{self.URL}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
         response = requests.get(url)
         time.sleep(1)
+        print(response)
         return response.json()
 
-    def fetch_match_data(self):
-        pass
+    def fetch_match_data(self, match_id):
+        url = f'{self.URL}/lol/match/v5/matches/{match_id}&api_key={self.apiKey}'
+        response = requests.get(url)
+        time.sleep(1)
+        return response.json()
 
-class Match(ApiFetch):
-    def __init__(self, match_id, match_data) -> None:
+class Match:
+    def __init__(self, api_fetch, match_id) -> None:
         self.match_id = match_id
-        self.match_duration = match_data['info']['gameDuration']
-        self.game_mode = match_data['info']['gameMode']
-        self.game_version = match_data['info']['gameVersion']
-        self.participants = match_data['info']['participants']
+        self.match_data = api_fetch.fetch_match_data(match_id)
+        self.match_duration = self.match_data['info']['gameDuration']
+        self.game_mode = self.match_data['info']['gameMode']
+        self.game_version = self.match_data['info']['gameVersion']
+        self.participants = self.match_data['info']['participants']
+
+
 
 class Participants(Match):
-    def __init__(self) -> None:
-        self.summoner_nick = None
+    def __init__(self, api_fetch, match_id, participant_id) -> None:
+        super().__init__(api_fetch, match_id)
+        participant_data = self.participants[participant_id]
+        self.summoner_name = None
         self.kills = None
         self.deaths = None
         self.assists = None
@@ -45,6 +55,5 @@ class Participants(Match):
         self.role = None
         self.level = None
         self.totalDamage = None
-    
     
     
