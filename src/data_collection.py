@@ -1,6 +1,5 @@
 import requests
 import time
-import pandas as pd
 
 class ApiFetch:
     URL = "https://americas.api.riotgames.com"
