@@ -5,15 +5,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    try:
-        api_fetch = ApiFetch('RGAPI-0a0dfc77-970e-45ad-8ecf-63037fa1b2d6', 'suzuhatitor', 'psyko')
-        match_id = api_fetch.fetch_match_id()
-        print(match_id)
-        matches = api_fetch.fetch_match_data(match_id[0])
-        return render_template('home.html', matches=matches)
-    except Exception as e:
-        print(f"Error: {e}")
-        return "Internal Server Error"
+    return render_template('home.html', match="Nenhum dado carregado")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route("/buscar", methods = ["GET", "post"])
+def buscar():
+    api_key = request.form["api_key"]
+    id = request.form["id"]
+    api_fetch = ApiFetch(api_key, id)
+    match_id = api_fetch.fetch_match_id()
+    matches = api_fetch.fetch_match_data(match_id[0])
+    return render_template('home.html', match=matches['info'])
+    

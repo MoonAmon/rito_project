@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Match Statistics</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <form action="buscar" method="POST">
+        <label for="api_key">API Key:</label><br>
+        <input type="text" id="api_key" name="api_key"><br>
+        <input type="text" id="id" name="id"><br>
+        <button type="submit" name="buscar">Buscar</button>
+    </form>
+
+    <h2>Match ID: {{ match.gameId }}</h2>
+    <p>Match Duration: {{ match.gameDuration }}</p>
+    <p>Game Mode: {{ match.gameMode }}</p>
+    <p>Game Version: {{ match.gameVersion }}</p>
+
+    <h3>Participants:</h3>
+    <ul>
+        {% for participant in match.participants %}
+            <li>
+                <strong>Summoner Name:</strong> {{ participant.summonerName }},
+                <strong>Kills:</strong> {{ participant.kills }},
+                <strong>Deaths:</strong> {{ participant.deaths }},
+                <strong>Assists:</strong> {{ participant.assists }},
+                <strong>Champion:</strong> {{ participant.championName }},
+                <strong>Role:</strong> {{ participant.role }},
+                <strong>Level:</strong> {{ participant.level }},
+                <strong>Total Damage:</strong> {{ participant.totalDamageDealtToChampions
+                }}
+            </li>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html>

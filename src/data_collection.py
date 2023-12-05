@@ -4,11 +4,9 @@ import time
 class ApiFetch:
     URL = "https://americas.api.riotgames.com"
 
-    def __init__(self, apiKey, summonerNick, summonerTag) -> None:
+    def __init__(self, apiKey, puuid=None) -> None:
         self.apiKey = apiKey
-        self.summoner_nick = summonerNick
-        self.summoner_tag = summonerTag
-        self.summoner_id = self.fetch_summoner_id()
+        self.summoner_id = puuid
     
     def fetch_summoner_id(self):
         url = f'{self.URL}/riot/account/v1/accounts/by-riot-id/{self.summoner_nick}/{self.summoner_tag}?api_key={self.apiKey}'
