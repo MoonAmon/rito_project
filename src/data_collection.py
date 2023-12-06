@@ -1,5 +1,7 @@
 import requests
 import time
+import pandas as pd
+import matplotlib.pyplot as plt
 
 class ApiFetch:
     URL = "https://americas.api.riotgames.com"
@@ -40,7 +42,7 @@ class Match:
         self.game_mode = self.match_data['info']['gameMode']
         self.game_version = self.match_data['info']['gameVersion']
         self.participants = self.match_data['info']['participants']
-
+        
 
 
 class Participants(Match):
@@ -57,6 +59,30 @@ class Participants(Match):
         self.level = None
         self.totalDamage = None
     
+class Analytics(Match):
+    def __init__(self, api_fetch, match_id, match_df=None) -> None:
+        super().__init__(api_fetch, match_id)
+        self.match_df = self.get_dataframe_match()
+
+    def get_dataframe_match(self):
+        
+        participants_df = pd.DataFrame()
+
+        for participant in self.participants:
+            participant_info = {
+                'championName': participant['championName'],
+                'kills': participant['kills'],
+                'death': participant['deaths'],
+                'assists': participant['assists'],
+                'totalDamageToChampions': participant['totalDamageDealtToChampions'],
+                'goldEarned': participant['goldEarned'],
+                'visioScore': participant['visionScore'],
+                'role': participant['individualPosition'],
+                'teamId': participant['teamId']
+            }
+            participants_df = pd.concat([participants_df, pd.DataFrame([participant_info])], ignore_index=True)
+
+        return participants_df
     
-match = ApiFetch("RGAPI-0a0dfc77-970e-45ad-8ecf-63037fa1b2d6","suzuhatitor", "psyko","")
-match.fetch_match_id()
+
+

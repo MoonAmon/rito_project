@@ -6,13 +6,6 @@
 </head>
 
 <body>
-<<<<<<< HEAD
-        <h2>Match ID: {{ match }}</h2>
-        <p>Match Duration: {{ match.gameDuration }}</p>
-        <p>Game Mode: {{ match.gameMode }}</p>
-        <p>Game Version: {{ match.gameVersion }}</p>
-        <p>Participants: {{ match.participants }}</p>
-=======
     <h2>Match ID: {{ match.gameId }}</h2>
     <p>Match Duration: {{ match.gameDuration }}</p>
     <p>Game Mode: {{ match.gameMode }}</p>
@@ -33,8 +26,9 @@
             </li>
         {% endfor %}
     </ul>
+    <img src="{{ url_for('static', filename='images/barplot.png') }}" alt="Bar plot">
+    {{ table | safe }}
 
->>>>>>> 1341913aabc640b9e35f733c65cd5eb62bfc30fe
 </body>
 
 </html>
