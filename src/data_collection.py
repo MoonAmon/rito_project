@@ -1,88 +1,131 @@
 import requests
-import time
 import pandas as pd
-import matplotlib.pyplot as plt
+import time
 
 class ApiFetch:
-    URL = "https://americas.api.riotgames.com"
+    """
+    Classe responsável por buscar dados da API da Riot Games.
+    """
 
-    def __init__(self, apiKey, summonerNick, summonerTag, puuid=None) -> None:
-        self.apiKey = apiKey
-        self.summoner_nick = summonerNick
-        self.summoner_tag = summonerTag
-        self.summoner_id = puuid
+    URL = "https://br1.api.riotgames.com"
+    URL2 = "https://americas.api.riotgames.com"
+
+    KEY = "RGAPI-5e7ba6ad-ff48-435b-a8b7-b3a3b71ee2cb"
+
+    def __init__(self, summoners_name) -> None:
+        """
+        Inicializa a classe ApiFetch.
+
+        Args:
+            summoners_name (str): O nome do invocador.
+        """
+        self.summoners_name = summoners_name
+        self.apiKey = self.KEY
+        self.summoner_id = self.fetch_summoner_puuid()
     
-    def fetch_summoner_id(self):
-        url = f'{self.URL}/riot/account/v1/accounts/by-riot-id/{self.summoner_nick}/{self.summoner_tag}?api_key={self.apiKey}'
+    def fetch_summoner_puuid(self) -> str:
+        """
+        Busca o PUUID do invocador.
+
+        Returns:
+            str: O PUUID do invocador.
+        """
+        url = f"{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}"
         response = requests.get(url)
         response = response.json()
-        print(response)
         time.sleep(1)
-        self.summoner_id = response['puuid']
-
+        return response["puuid"]
 
     def fetch_match_id(self, count=10) -> list:
-        url = f'{self.URL}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
+        """
+        Busca os IDs das partidas do invocador.
+
+        Args:
+            count (int, optional): O número de IDs de partida a serem buscados. O padrão é 10.
+
+        Returns:
+            list: Uma lista de IDs de partida.
+        """
+        url = f'{self.URL2}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
+        print(url)
         response = requests.get(url)
         time.sleep(1)
         return response.json()
 
-    def fetch_match_data(self, match_id):
-        url = f'{self.URL}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
+    def fetch_match_data(self, match_id) -> dict:
+        """
+        Busca os dados de uma partida específica.
+
+        Args:
+            match_id (str): O ID da partida.
+
+        Returns:
+            dict: Um dicionário contendo os dados da partida.
+        """
+        url = f'{self.URL2}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
         response = requests.get(url)
-        print(response.json())
         time.sleep(1)
         return response.json()
+    
+   
 
 class Match:
+    """
+    Classe que representa uma partida.
+    """
+
     def __init__(self, api_fetch, match_id) -> None:
+        """
+        Inicializa a classe Match.
+
+        Args:
+            api_fetch (ApiFetch): Uma instância da classe ApiFetch.
+            match_id (str): O ID da partida.
+        """
         self.match_id = match_id
         self.match_data = api_fetch.fetch_match_data(match_id)
         self.match_duration = self.match_data['info']['gameDuration']
         self.game_mode = self.match_data['info']['gameMode']
         self.game_version = self.match_data['info']['gameVersion']
         self.participants = self.match_data['info']['participants']
-        
+
 
 
 class Participants(Match):
+    """
+    Classe que representa um participante de uma partida.
+    """
+
     def __init__(self, api_fetch, match_id, participant_id) -> None:
+        """
+        Inicializa a classe Participants.
+
+        Args:
+            api_fetch (ApiFetch): Uma instância da classe ApiFetch.
+            match_id (str): O ID da partida.
+            participant_id (int): O ID do participante.
+        """
         super().__init__(api_fetch, match_id)
         participant_data = self.participants[participant_id]
-        self.summoner_name = None
-        self.kills = None
-        self.deaths = None
-        self.assists = None
-        self.vision_score = None
-        self.champion_name = None
-        self.role = None
-        self.level = None
-        self.totalDamage = None
+        self.summoner_name = participant_data['summonerName']
+        self.kills = participant_data['kills']
+        self.deaths = participant_data['deaths']
+        self.assists = participant_data['assists']
+        self.vision_score = participant_data['visionScore'] 
+        self.champion_name = participant_data['championName']
+        self.lane = participant_data['lane'] 
+        self.level = participant_data['champLevel']
+        self.totalDamage = participant_data['totalDamageDealt']
     
-class Analytics(Match):
-    def __init__(self, api_fetch, match_id, match_df=None) -> None:
-        super().__init__(api_fetch, match_id)
-        self.match_df = self.get_dataframe_match()
-
-    def get_dataframe_match(self):
-        
-        participants_df = pd.DataFrame()
-
-        for participant in self.participants:
-            participant_info = {
-                'championName': participant['championName'],
-                'kills': participant['kills'],
-                'death': participant['deaths'],
-                'assists': participant['assists'],
-                'totalDamageToChampions': participant['totalDamageDealtToChampions'],
-                'goldEarned': participant['goldEarned'],
-                'visioScore': participant['visionScore'],
-                'role': participant['individualPosition'],
-                'teamId': participant['teamId']
-            }
-            participants_df = pd.concat([participants_df, pd.DataFrame([participant_info])], ignore_index=True)
-
-        return participants_df
-    
-
-
+    def fetch_champion_icon(self):
+        """
+        Busca o ícone do campeão do participante.
+        """
+        version = '11.8.1'
+        url = f'http://ddragon.leagueoflegends.com/cdn/{version}/img/champion/{self.champion_name}.png'
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(f'static/images/{self.champion_name}.png', 'wb') as f:
+                f.write(response.content)
+        else:
+            print(f'Erro ao buscar o ícone para {self.champion_name}: {response.status_code}')
