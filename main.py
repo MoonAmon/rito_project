@@ -9,9 +9,9 @@ def home():
 
 @app.route("/buscar", methods = ["GET", "post"])
 def buscar():
-    api_key = request.form["api_key"]
-    id = request.form["id"]
-    api_fetch = ApiFetch(api_key, id)
+    summoners_name = request.form["summoners_name"]
+    api_fetch = ApiFetch(summoners_name)
+    
     match_id = api_fetch.fetch_match_id()
     matches = api_fetch.fetch_match_data(match_id[0])
     return render_template('home.html', match=matches['info'])

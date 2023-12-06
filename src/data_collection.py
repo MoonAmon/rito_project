@@ -2,26 +2,34 @@ import requests
 import time
 
 class ApiFetch:
-    URL = "https://americas.api.riotgames.com"
+    URL = "https://br1.api.riotgames.com"
+    URL2 = "https://americas.api.riotgames.com"
 
-    def __init__(self, apiKey, puuid=None) -> None:
-        self.apiKey = apiKey
-        self.summoner_id = puuid
+    KEY = "RGAPI-5e7ba6ad-ff48-435b-a8b7-b3a3b71ee2cb"
+
+    def __init__(self, summoners_name, summoner_id=None) -> None:
+        self.summoners_name = summoners_name
+        self.apiKey = self.KEY
+        self.summoner_id = self.fetch_summoner_puuid()
     
-    def fetch_summoner_id(self):
-        url = f'{self.URL}/riot/account/v1/accounts/by-riot-id/{self.summoner_nick}/{self.summoner_tag}?api_key={self.apiKey}'
+    def fetch_summoner_puuid(self):
+        url = f"{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}"
         response = requests.get(url)
+        response = response.json()
+        print(response["puuid"])
         time.sleep(1)
-        return response.json()['puuid']
+        return response["puuid"]
 
     def fetch_match_id(self, count=10) -> list:
-        url = f'{self.URL}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
+        url = f'{self.URL2}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
+        print(url)
         response = requests.get(url)
+        print(response.json())
         time.sleep(1)
         return response.json()
 
     def fetch_match_data(self, match_id):
-        url = f'{self.URL}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
+        url = f'{self.URL2}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
         response = requests.get(url)
         time.sleep(1)
         return response.json()
