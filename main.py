@@ -2,8 +2,7 @@ from flask import Flask, request, render_template
 from src.data_collection import Participants, ApiFetch, Match
 from src.data_analysis import Analytics
 import dash
-from dash import dcc
-from dash import html
+from dash import dcc, html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from dash import dash_table
@@ -12,12 +11,21 @@ from flask import send_from_directory
 
 app = Flask(__name__)
 dash_app = dash.Dash(__name__, server=app, url_base_pathname='/dashboard/')
+app.debug = True
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 @app.route('/')
 def home():
     api_fetch = ApiFetch('pineapplepie')
     matchs = api_fetch.fetch_match_id()
-    participants = Participants(api_fetch, matchs[0], 0)
+    return render_template('home.html', matchs=matchs)
+
+@app.route('/<match_id>')
+def match_detail(match_id):
+    api_fetch = ApiFetch('pineapplepie')
+    participants = Participants(api_fetch, match_id, 0)
     participants.fetch_all_champion_icons()
     return render_template('match.html', participants=participants.participants)
 
@@ -52,5 +60,3 @@ def send_img(path):
 
 dash_app.layout = serve_layout
 
-if __name__ == '__main__':
-    app.run(debug=True)

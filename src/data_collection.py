@@ -116,12 +116,13 @@ class Participants(Match):
         self.lane = participant_data['lane'] 
         self.level = participant_data['champLevel']
         self.totalDamage = participant_data['totalDamageDealt']
+        self.win = participant_data['win']
     
     def fetch_champion_icon(self):
         """
         Busca o ícone do campeão do participante.
         """
-        version = '11.8.1'
+        version = '13.24.1'
         url = f'http://ddragon.leagueoflegends.com/cdn/{version}/img/champion/{self.champion_name}.png'
         response = requests.get(url)
         if response.status_code == 200:
