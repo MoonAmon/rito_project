@@ -129,3 +129,8 @@ class Participants(Match):
                 f.write(response.content)
         else:
             print(f'Erro ao buscar o ícone para {self.champion_name}: {response.status_code}')
+
+    def fetch_all_champion_icons(self):
+        for participant in self.participants:
+            self.champion_name = participant['championName']
+            self.fetch_champion_icon()

@@ -16,7 +16,7 @@ class Analytics(Match):
         super().__init__(api_fetch, match_id)
         self.match_df = self.get_dataframe_match()
 
-    def get_dataframe_match(self) -> pd.DataFrame:
+    def get_dataframe_match(self):
         """
         Recupera os dados da partida e retorna-os como um DataFrame do pandas.
 
@@ -40,3 +40,4 @@ class Analytics(Match):
             participants_df = pd.concat([participants_df, pd.DataFrame([participant_info])], ignore_index=True)
 
         return participants_df
+

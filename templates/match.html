@@ -1,0 +1,24 @@
+<html>
+    <table>
+        <thead>
+            <tr>
+                <th>Champion</th>
+                <th>Summoner Name</th>
+                <th>Champion Name</th>
+                <th>Kills</th>
+                <th>Deaths</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for participant in participants %}
+                <tr>
+                    <td><img src="{{ url_for('send_img', path='static/images/' + participant.championName + '.png')}}" alt="{{ participant.championName }}" width="50" height="50"></td>
+                    <td>{{ participant.summonerName }}</td>
+                    <td>{{ participant.championName }}</td>
+                    <td>{{ participant.kills }}</td>
+                    <td>{{ participant.deaths }}</td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<html>
