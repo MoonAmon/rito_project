@@ -3,6 +3,7 @@ body {
 }
 header {
     text-align: end;
+    margin-top: 1%;
 }
 header a {
     text-decoration: none;
