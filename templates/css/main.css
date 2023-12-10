@@ -1,0 +1,48 @@
+body {
+    background-color: #3F51B5;
+}
+header {
+    text-align: end;
+}
+header a {
+    text-decoration: none;
+    color: #FFFF;
+    margin-right:1%;
+}
+header a:hover{
+    color: #000000;
+}
+section  {
+    background-color: blue;
+    float: left;
+    width: 25%;
+    margin-right: 2%;
+
+}
+main {
+    background-color: blueviolet;
+    float: left;
+    width: 70%;
+}
+main button{
+    border-radius: 5px;
+    border: none;
+}
+div input {
+    border-radius: 3px;
+    border: none;
+}
+div button {
+    border-radius: 5px;
+    border: none;
+}
+div {
+padding-bottom: 2%;
+}
+.input-icon {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm4.24-9.41l-4.24 4.24-2.12-2.12-1.41 1.41 2.82 2.82 5.65-5.65-1.41-1.41z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: calc(8% - 10px) center;
+    padding-left: 20px; /* espaço para o ícone */
+}
+
