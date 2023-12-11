@@ -59,12 +59,12 @@ dash_app.layout = html.Div([
         value='summoner1'
     ),
     html.Div(id='match-stats'),
-    dcc.Graph(id='line-chart')
+    dcc.Graph(id='box-chart')
 ])
 
 @dash_app.callback(
     [Output('match-stats', 'children'),
-     Output('line-chart', 'figure')],
+     Output('box-chart', 'figure')],
     [Input('summoner-dropdown', 'value')]
 )
 def update_output(summoner_name):
