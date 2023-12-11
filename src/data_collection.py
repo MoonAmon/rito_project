@@ -10,7 +10,7 @@ class ApiFetch:
     URL = "https://br1.api.riotgames.com"
     URL2 = "https://americas.api.riotgames.com"
 
-    KEY = "RGAPI-5e7ba6ad-ff48-435b-a8b7-b3a3b71ee2cb"
+    KEY = "RGAPI-eba9d0df-6599-40ef-b93f-9c53d67c901f"
 
     def __init__(self, summoners_name) -> None:
         """
@@ -33,6 +33,7 @@ class ApiFetch:
         url = f"{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}"
         response = requests.get(url)
         response = response.json()
+        print(response)
         time.sleep(1)
         return response["puuid"]
 
