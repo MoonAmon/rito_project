@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <link rel="stylesheet" href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css'>
+        <style>
+            table tr:nth-child(-n+5) {
+                background-color: #619cfa;
+            }
+            table tr:nth-last-child(-n+5) {
+                background-color: #fa6161;
+            }
+        </style>
+    </head>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Champion</th>
+                <th>Summoner Name</th>
+                <th>Champion Name</th>
+                <th>Kills</th>
+                <th>Deaths</th>
+                <th>Assists</th>
+                <th>Vision Score</th>
+                <th>Lane</th>
+                <th>Total Damage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for participant in participants %}
+                <tr>
+                    <td><img src="{{ url_for('send_img', path='static/images/' + participant.championName + '.png')}}" alt="{{ participant.championName }}" width="50" height="50"></td>
+                    <td>{{ participant.summonerName }}</td>
+                    <td>{{ participant.championName }}</td>
+                    <td>{{ participant.kills }}</td>
+                    <td>{{ participant.deaths }}</td>
+                    <td>{{ participant.assists }}</td>
+                    <td>{{ participant.visionScore }}</td>
+                    <td>{{ participant.lane }}</td>
+                    <td>{{ participant.totalDamageDealt }}</td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<html>
