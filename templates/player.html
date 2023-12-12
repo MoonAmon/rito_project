@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Summoner Profile</title>
 </head>
+
 <body>
     <h1>Summoner Profile</h1>
     <p>Summoner Name: {{ summoner_data.name }}</p>
@@ -11,9 +13,9 @@
     <h2>Recent Matches</h2>
     <table>
         {% for match in matchs_data %}
-            <tr>
-            
-        {% endfor %}
+        <tr>
+
+            {% endfor %}
     </table>
 </body>
 <html>
