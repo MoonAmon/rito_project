@@ -20,8 +20,9 @@ if __name__ == '__main__':
 def home():
     api_fetch = ApiFetch('puoiaiolam')
     matchs = api_fetch.fetch_match_id()
+    mathc_stats = api_fetch.fetch_all_match_data(matchs)
     summoner_info = api_fetch.fetch_summoner_data()
-    return render_template('home.html', matchs=matchs, summoner_info = summoner_info)
+    return render_template('home.html', matchs=matchs, summoner_info = summoner_info, mathc_stats = mathc_stats)
 
 @app.route('/<match_id>')
 def match_detail(match_id):
@@ -29,11 +30,6 @@ def match_detail(match_id):
     participants = Participants(api_fetch, match_id, 0)
     participants.fetch_all_champion_icons()
     return render_template('match.html', participants=participants.participants)
-
-@app.route('/dashboard/')
-def render_dashboard():
-    return dash_app.index()
-
 
 def serve_layout():
     api_fetch = ApiFetch('puoiaiolam')

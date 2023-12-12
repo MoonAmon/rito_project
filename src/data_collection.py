@@ -10,7 +10,7 @@ class ApiFetch:
     URL = "https://br1.api.riotgames.com"
     URL2 = "https://americas.api.riotgames.com"
 
-    KEY = "RGAPI-ba7227f2-692d-4709-8d41-dc03a99588ec"
+    KEY = "RGAPI-3e66e9c4-be2b-4e7f-86c9-7374743341b0"
 
     def __init__(self, summoners_name) -> None:
         """
@@ -73,6 +73,25 @@ class ApiFetch:
         response = requests.get(url)
         print(response.json())
         return response.json()
+    
+    def fetch_all_match_data(self, match_ids):
+        """
+        Busca os dados de todas as partidas da lista.
+
+        Args:
+            match_ids (list): Lista contendo os IDs das partidas. 
+
+        Returns:
+            list: Uma lista de dicionarios, onde cada dicionario contem os dados da partida.
+        """
+
+        all_match_data = []
+        for match_id in match_ids:
+            match_data = self.fetch_match_data(match_id)
+            all_match_data.append(match_data)
+            time.sleep(1)
+        
+        return all_match_data
     
 class Match:
     """
