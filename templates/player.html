@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Enter Details</title>
+    <title>Summoner Profile</title>
 </head>
-<form method="POST">
-    <label for="summoner_name">Summoner Name:</label>
-    <input type="text" name="summoner_name" id="summoner_name" required>
-    <input type="submit" value="Submit">
-
+<body>
     <h1>Summoner Profile</h1>
     <p>Summoner Name: {{ summoner_data.name }}</p>
     <p>Summoner Level: {{ summoner_data.summonerLevel }}</p>
@@ -16,9 +11,9 @@
     <h2>Recent Matches</h2>
     <table>
         {% for match in matchs_data %}
-        <tr>
-
-            {% endfor %}
+            <tr>
+            
+        {% endfor %}
     </table>
-</form>
-</html>
+</body>
+<html>

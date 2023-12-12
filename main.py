@@ -1,5 +1,5 @@
-from flask import Flask, request, render_template
-from src.data_collection import Participants, ApiFetch, Match
+from flask import Flask, request, render_template, redirect, url_for
+from src.data_collection import Participants, ApiFetch, Summoner
 from src.data_analysis import Analytics
 import dash
 from dash import dcc, html
@@ -16,13 +16,21 @@ app.debug = True
 if __name__ == '__main__':
     app.run(debug=True)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    api_fetch = ApiFetch('puoiaiolam')
-    matchs = api_fetch.fetch_match_id()
-    mathc_stats = api_fetch.fetch_all_match_data(matchs)
-    summoner_info = api_fetch.fetch_summoner_data()
-    return render_template('home.html', matchs=matchs, summoner_info = summoner_info, mathc_stats = mathc_stats)
+    if request.method == 'POST':
+        summoner_name = request.form.get('summoner_name')
+        summoner = Summoner(summoner_name)
+        summoner_data = summoner.summoner_response
+        tier, rank = summoner.fetch_rank()
+        summoner_data['tier'] = tier
+        summoner_data['rank'] = rank
+
+        # Pegando as ultimas partidas do summoner
+        api_fetch = ApiFetch(summoner_name)
+        matchs_id = api_fetch.fetch_match_id(10)
+        matchs_data = api_fetch.fetch_all_match_data(matchs_id)
+        return render_template('home.html', summoner_data=summoner_data, matchs_data=matchs_data)
 
 @app.route('/<match_id>')
 def match_detail(match_id):

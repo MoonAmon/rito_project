@@ -113,6 +113,14 @@ class Match:
         self.game_version = self.match_data['info']['gameVersion']
         self.participants = self.match_data['info']['participants']
 
+    def get_details(self) -> dict:
+        return {
+            'match_id': self.match_id,
+            'match_duration': self.match_duration,
+            'game_mode': self.game_mode,
+            'game_version': self.game_version
+        }
+
 
 
 class Participants(Match):
@@ -142,7 +150,7 @@ class Participants(Match):
         self.totalDamage = participant_data['totalDamageDealt']
         self.win = participant_data['win']
     
-    def fetch_champion_icon(self):
+    def fetch_champion_icon(self) -> None:
         """
         Busca o ícone do campeão do participante.
         """
@@ -155,7 +163,57 @@ class Participants(Match):
         else:
             print(f'Erro ao buscar o ícone para {self.champion_name}: {response.status_code}')
 
-    def fetch_all_champion_icons(self):
+    def fetch_all_champion_icons(self) -> None:
         for participant in self.participants:
             self.champion_name = participant['championName']
             self.fetch_champion_icon()
+    
+    def get_details(self) -> dict:
+        participant_data = self.participants[self.participant_id]
+        return {
+            'summoner_nick': participant_data['summonerName'],
+            'champion_name': participant_data['championName'],
+            'kills': participant_data['kills'],
+            'deaths': participant_data['deaths'],
+            'assists': participant_data['assists']
+        }
+
+class Summoner(ApiFetch):
+
+    def __init__(self, summoners_name) -> None:
+        super().__init__(summoners_name)
+        self.summoner_response = self.fetch_summoner_puuid() 
+        self.name = self.summoner_response['name']
+        self.summoner_lvl = self.summoner_response['summonerLevel']
+        self.summoner_id = self.summoner_response['id']
+        self.summoner_icon = self.summoner_response['profileIconId']
+        self.summoner_rank, self.summoner_tier = self.fetch_rank() 
+    
+    def fetch_summoner_puuid(self) -> str:
+        url = f"{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}"
+        response = requests.get(url)
+        response = response.json()
+
+        return response
+    
+    def fetch_rank(self):
+        url = f"{self.URL}/lol/league/v4/entries/by-summoner/{self.summoner_id}?api_key={self.apiKey}"
+        response = requests.get(url)
+        response = response.json()
+        print(response)
+        
+        if response:
+            return response[0]['tier'], response[0]['rank']
+        else:
+            return None, None
+
+    def fetch_league_id(self):
+        summoner_id = self.summoner_response['id']
+        url = f"{self.URL}/lol/league/v4/entries/by-summoner/{summoner_id}?api_key={self.apiKey}"
+        response = requests.get(url)
+        response = response.json()
+
+        if response:
+           return response[0]['leagueId']
+        else:
+           return None 
