@@ -10,7 +10,7 @@ class ApiFetch:
     URL = "https://br1.api.riotgames.com"
     URL2 = "https://americas.api.riotgames.com"
 
-    KEY = "RGAPI-5e7ba6ad-ff48-435b-a8b7-b3a3b71ee2cb"
+    KEY = "RGAPI-dfb447b2-6c59-4cff-be44-6b368a1ad10d"
 
     def __init__(self, summoners_name) -> None:
         """
@@ -67,6 +67,24 @@ class ApiFetch:
         time.sleep(1)
         return response.json()
     
+    def fetch_all_match_data(self, match_ids):
+        """
+        Busca os dados de todas as partidas da lista.
+
+        Args:
+            match_ids (list): Lista contendo os IDs das partidas. 
+
+        Returns:
+            list: Uma lista de dicionarios, onde cada dicionario contem os dados da partida.
+        """
+
+        all_match_data = []
+        for match_id in match_ids:
+            match_data = self.fetch_match_data(match_id)
+            all_match_data.append(match_data)
+            time.sleep(1)
+        
+        return all_match_data
    
 
 class Match:
@@ -88,6 +106,14 @@ class Match:
         self.game_mode = self.match_data['info']['gameMode']
         self.game_version = self.match_data['info']['gameVersion']
         self.participants = self.match_data['info']['participants']
+
+    def get_details(self) -> dict:
+        return {
+            'match_id': self.match_id,
+            'match_duration': self.match_duration,
+            'game_mode': self.game_mode,
+            'game_version': self.game_version
+        }
 
 
 
@@ -118,7 +144,7 @@ class Participants(Match):
         self.totalDamage = participant_data['totalDamageDealt']
         self.win = participant_data['win']
     
-    def fetch_champion_icon(self):
+    def fetch_champion_icon(self) -> None:
         """
         Busca o ícone do campeão do participante.
         """
@@ -131,7 +157,56 @@ class Participants(Match):
         else:
             print(f'Erro ao buscar o ícone para {self.champion_name}: {response.status_code}')
 
-    def fetch_all_champion_icons(self):
+    def fetch_all_champion_icons(self) -> None:
         for participant in self.participants:
             self.champion_name = participant['championName']
             self.fetch_champion_icon()
+    
+    def get_details(self) -> dict:
+        participant_data = self.participants[self.participant_id]
+        return {
+            'summoner_nick': participant_data['summonerName'],
+            'champion_name': participant_data['championName'],
+            'kills': participant_data['kills'],
+            'deaths': participant_data['deaths'],
+            'assists': participant_data['assists']
+        }
+
+class Summoner(ApiFetch):
+
+    def __init__(self, summoners_name) -> None:
+        super().__init__(summoners_name)
+        self.summoner_response = self.fetch_summoner_puuid() 
+        self.name = self.summoner_response['name']
+        self.summoner_lvl = self.summoner_response['summonerLevel']
+        self.summoner_id = self.summoner_response['id']
+        self.summoner_rank, self.summoner_tier = self.fetch_rank() 
+    
+    def fetch_summoner_puuid(self) -> str:
+        url = f"{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}"
+        response = requests.get(url)
+        response = response.json()
+
+        return response
+    
+    def fetch_rank(self):
+        url = f"{self.URL}/lol/league/v4/entries/by-summoner/{self.summoner_id}?api_key={self.apiKey}"
+        response = requests.get(url)
+        response = response.json()
+        print(response)
+        
+        if response:
+            return response[0]['tier'], response[0]['rank']
+        else:
+            return None, None
+
+    def fetch_league_id(self):
+        summoner_id = self.summoner_response['id']
+        url = f"{self.URL}/lol/league/v4/entries/by-summoner/{summoner_id}?api_key={self.apiKey}"
+        response = requests.get(url)
+        response = response.json()
+
+        if response:
+           return response[0]['leagueId']
+        else:
+           return None 

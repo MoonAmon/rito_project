@@ -1,5 +1,13 @@
+<!DOCTYPE html>
 <html>
-    {% for match_id in matchs %}
-        <a href="{{ url_for('match_detail', match_id=match_id) }}">{{match_id}}</a><br>
-    {% endfor%}
+<head>
+    <title>Enter Details</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="summoner_name">Summoner Name:</label>
+        <input type="text" name="summoner_name" id="summoner_name" required>
+        <input type="submit" value="Submit">
+    </form>
+</body>
 </html>

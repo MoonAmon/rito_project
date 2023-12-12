@@ -1,0 +1,5 @@
+<html>
+    {% for match_id in matchs %}
+        <a href="{{ url_for('match_detail', match_id=match_id) }}">{{match_id}}</a><br>
+    {% endfor%}
+</html>

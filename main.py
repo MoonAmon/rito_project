@@ -1,5 +1,5 @@
-from flask import Flask, request, render_template
-from src.data_collection import Participants, ApiFetch, Match
+from flask import Flask, request, render_template, redirect, url_for
+from src.data_collection import Participants, ApiFetch, Summoner
 from src.data_analysis import Analytics
 import dash
 from dash import dcc, html
@@ -16,11 +16,29 @@ app.debug = True
 if __name__ == '__main__':
     app.run(debug=True)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    api_fetch = ApiFetch('pineapplepie')
-    matchs = api_fetch.fetch_match_id()
-    return render_template('home.html', matchs=matchs)
+    if request.method == 'POST':
+        summoner_name = request.form.get('summoner_name')
+        return redirect(url_for('summoner_profile', summoner_name=summoner_name))
+    return render_template('home.html')
+
+@app.route('/player/<summoner_name>')
+def summoner_profile(summoner_name):
+    # Pegando os dados do summoner
+    summoner = Summoner(summoner_name)
+    summoner_data = summoner.summoner_response
+    tier, rank = summoner.fetch_rank()
+    summoner_data['tier'] = tier
+    summoner_data['rank'] = rank
+
+    # Pegando as ultimas partidas do summoner
+    api_fetch = ApiFetch(summoner_name)
+    matchs_id = api_fetch.fetch_match_id(10)
+    matchs_data = api_fetch.fetch_all_match_data(matchs_id)
+
+    return render_template('player.html', summoner_data=summoner_data, matchs_data=matchs_data)
+
 
 @app.route('/<match_id>')
 def match_detail(match_id):
