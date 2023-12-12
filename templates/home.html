@@ -1,72 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Enter Details</title>
 </head>
-<body>
-    <form method="POST">
-        <label for="summoner_name">Summoner Name:</label>
-        <input type="text" name="summoner_name" id="summoner_name" required>
-        <input type="submit" value="Submit">
-    </form>
-</body>
-<style>
-    body {
-        background-color: #3F51B5;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 2rem;
-        flex-direction: column;
-        height: 100vh;
-        margin: 0;
-    }
+<form method="POST">
+    <label for="summoner_name">Summoner Name:</label>
+    <input type="text" name="summoner_name" id="summoner_name" required>
+    <input type="submit" value="Submit">
 
-    .card {
-        background-color: #ffffff;
-        padding: 1rem 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #575757;
-        border-radius: 8px;
-        overflow: hidden;
-        width: 150px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+    <h1>Summoner Profile</h1>
+    <p>Summoner Name: {{ summoner_data.name }}</p>
+    <p>Summoner Level: {{ summoner_data.summonerLevel }}</p>
+    <p>Rank: {{ summoner_data.rank }} {{ summoner_data.tier}}</p>
+    <h2>Recent Matches</h2>
+    <table>
+        {% for match in matchs_data %}
+        <tr>
 
-    .card img {
-        width: 30%;
-        height: auto;
-    }
-
-    .name {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
-
-    .level {
-        font-size: 14px;
-        color: #555;
-    }
-
-    a {
-        color: #ffffff;
-    }
-</style>
-<div class="card">
-    <img src="https://cdn.communitydragon.org/latest/profile-icon/{{summoner_info.profileIconId}}" alt="Ícone">
-    <div class="name">{{summoner_info.name}}</div>
-    <div class="level">{{summoner_info.summonerLevel}}</div>
-</div>
-
-<div>
-    {% for match_id in matchs %}
-    <a href="{{ url_for('match_detail', match_id=match_id) }}">{{match_id}}</a><br>
-    {% endfor%}
-</div>
-
+            {% endfor %}
+    </table>
+</form>
 </html>

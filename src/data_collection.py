@@ -10,7 +10,7 @@ class ApiFetch:
     URL = "https://br1.api.riotgames.com"
     URL2 = "https://americas.api.riotgames.com"
 
-    KEY = "RGAPI-dfb447b2-6c59-4cff-be44-6b368a1ad10d"
+    KEY = "RGAPI-3e66e9c4-be2b-4e7f-86c9-7374743341b0"
 
     def __init__(self, summoners_name) -> None:
         """
@@ -67,6 +67,13 @@ class ApiFetch:
         time.sleep(1)
         return response.json()
     
+    def fetch_summoner_data(self) -> dict:
+        url = f'{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}'
+        print(url)
+        response = requests.get(url)
+        print(response.json())
+        return response.json()
+    
     def fetch_all_match_data(self, match_ids):
         """
         Busca os dados de todas as partidas da lista.
@@ -85,8 +92,7 @@ class ApiFetch:
             time.sleep(1)
         
         return all_match_data
-   
-
+    
 class Match:
     """
     Classe que representa uma partida.

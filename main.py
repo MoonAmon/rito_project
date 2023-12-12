@@ -20,29 +20,17 @@ if __name__ == '__main__':
 def home():
     if request.method == 'POST':
         summoner_name = request.form.get('summoner_name')
-        return redirect(url_for('summoner_profile', summoner_name=summoner_name))
-    return render_template('home.html')
+        summoner = Summoner(summoner_name)
+        summoner_data = summoner.summoner_response
+        tier, rank = summoner.fetch_rank()
+        summoner_data['tier'] = tier
+        summoner_data['rank'] = rank
 
-@app.route('/player/<summoner_name>')
-def summoner_profile(summoner_name):
-    # Pegando os dados do summoner
-    summoner = Summoner(summoner_name)
-    summoner_data = summoner.summoner_response
-    tier, rank = summoner.fetch_rank()
-    summoner_data['tier'] = tier
-    summoner_data['rank'] = rank
-
-    # Pegando as ultimas partidas do summoner
-    api_fetch = ApiFetch(summoner_name)
-    matchs_id = api_fetch.fetch_match_id(10)
-    matchs_data = api_fetch.fetch_all_match_data(matchs_id)
-
-    return render_template('player.html', summoner_data=summoner_data, matchs_data=matchs_data)
-
-    api_fetch = ApiFetch('puoiaiolam')
-    matchs = api_fetch.fetch_match_id()
-    summoner_info = api_fetch.fetch_summoner_data()
-    return render_template('home.html', matchs=matchs, summoner_info = summoner_info)
+        # Pegando as ultimas partidas do summoner
+        api_fetch = ApiFetch(summoner_name)
+        matchs_id = api_fetch.fetch_match_id(10)
+        matchs_data = api_fetch.fetch_all_match_data(matchs_id)
+        return render_template('home.html', summoner_data=summoner_data, matchs_data=matchs_data)
 
 @app.route('/<match_id>')
 def match_detail(match_id):
@@ -50,11 +38,6 @@ def match_detail(match_id):
     participants = Participants(api_fetch, match_id, 0)
     participants.fetch_all_champion_icons()
     return render_template('match.html', participants=participants.participants)
-
-@app.route('/dashboard/')
-def render_dashboard():
-    return dash_app.index()
-
 
 def serve_layout():
     api_fetch = ApiFetch('puoiaiolam')
