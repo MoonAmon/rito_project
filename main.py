@@ -39,10 +39,14 @@ def summoner_profile(summoner_name):
 
     return render_template('player.html', summoner_data=summoner_data, matchs_data=matchs_data)
 
+    api_fetch = ApiFetch('puoiaiolam')
+    matchs = api_fetch.fetch_match_id()
+    summoner_info = api_fetch.fetch_summoner_data()
+    return render_template('home.html', matchs=matchs, summoner_info = summoner_info)
 
 @app.route('/<match_id>')
 def match_detail(match_id):
-    api_fetch = ApiFetch('pineapplepie')
+    api_fetch = ApiFetch('puoiaiolam')
     participants = Participants(api_fetch, match_id, 0)
     participants.fetch_all_champion_icons()
     return render_template('match.html', participants=participants.participants)
@@ -53,7 +57,7 @@ def render_dashboard():
 
 
 def serve_layout():
-    api_fetch = ApiFetch('pineapplepie')
+    api_fetch = ApiFetch('puoiaiolam')
     matchs = api_fetch.fetch_match_id()
     match_data = Analytics(api_fetch, matchs[0])
     df = match_data.match_df

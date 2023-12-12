@@ -180,6 +180,7 @@ class Summoner(ApiFetch):
         self.name = self.summoner_response['name']
         self.summoner_lvl = self.summoner_response['summonerLevel']
         self.summoner_id = self.summoner_response['id']
+        self.summoner_icon = self.summoner_response['profileIconId']
         self.summoner_rank, self.summoner_tier = self.fetch_rank() 
     
     def fetch_summoner_puuid(self) -> str:
