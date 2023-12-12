@@ -10,7 +10,7 @@ class ApiFetch:
     URL = "https://br1.api.riotgames.com"
     URL2 = "https://americas.api.riotgames.com"
 
-    KEY = "RGAPI-eba9d0df-6599-40ef-b93f-9c53d67c901f"
+    KEY = "RGAPI-ba7227f2-692d-4709-8d41-dc03a99588ec"
 
     def __init__(self, summoners_name) -> None:
         """
@@ -33,7 +33,6 @@ class ApiFetch:
         url = f"{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}"
         response = requests.get(url)
         response = response.json()
-        print(response)
         time.sleep(1)
         return response["puuid"]
 
@@ -68,8 +67,13 @@ class ApiFetch:
         time.sleep(1)
         return response.json()
     
-   
-
+    def fetch_summoner_data(self) -> dict:
+        url = f'{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}'
+        print(url)
+        response = requests.get(url)
+        print(response.json())
+        return response.json()
+    
 class Match:
     """
     Classe que representa uma partida.
