@@ -12,7 +12,10 @@
     <table>
         {% for match in matchs_data %}
             <tr>
-            
+                <td>{{ match.champion }}</td>
+                <td>{{ match.lane }}</td>
+                <td>{{ match.role }}</td>
+            </tr>
         {% endfor %}
     </table>
 </body>
