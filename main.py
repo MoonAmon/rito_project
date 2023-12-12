@@ -20,24 +20,29 @@ if __name__ == '__main__':
 def home():
     if request.method == 'POST':
         summoner_name = request.form.get('summoner_name')
-        summoner = Summoner(summoner_name)
-        summoner_data = summoner.summoner_response
-        tier, rank = summoner.fetch_rank()
-        summoner_data['tier'] = tier
-        summoner_data['rank'] = rank
+        return redirect(url_for('summoner_profile', summoner_name=summoner_name))
+    return render_template('home.html')
 
-        # Pegando as ultimas partidas do summoner
-        api_fetch = ApiFetch(summoner_name)
-        matchs_id = api_fetch.fetch_match_id(10)
-        matchs_data = api_fetch.fetch_all_match_data(matchs_id)
-        return render_template('home.html', summoner_data=summoner_data, matchs_data=matchs_data)
+@app.route('/player/<summoner_name>', methods=['GET', 'POST'])
+def summoner_profile(summoner_name):
 
-@app.route('/<match_id>')
-def match_detail(match_id):
-    api_fetch = ApiFetch('puoiaiolam')
-    participants = Participants(api_fetch, match_id, 0)
-    participants.fetch_all_champion_icons()
-    return render_template('match.html', participants=participants.participants)
+    if request.method == 'POST':
+        summoner_name = request.form.get('summoner_name')
+
+        return redirect(url_for('summoner_profile', summoner_name=summoner_name))
+    # Pegando os dados do summoner
+    summoner = Summoner(summoner_name)
+    summoner_data = summoner.summoner_response
+    tier, rank = summoner.fetch_rank()
+    summoner_data['tier'] = tier
+    summoner_data['rank'] = rank
+
+    # Pegando as ultimas partidas do summoner
+    #api_fetch = ApiFetch(summoner_name)
+    #matchs_id = api_fetch.fetch_match_id(10)
+    #matchs_data = api_fetch.fetch_all_match_data(matchs_id)
+
+    return render_template('player.html', summoner_data=summoner_data)
 
 def serve_layout():
     api_fetch = ApiFetch('puoiaiolam')
