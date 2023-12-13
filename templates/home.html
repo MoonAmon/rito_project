@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Enter Details</title>
+    <title>Summoner Profile</title>
 </head>
-<form method="POST">
-    <label for="summoner_name">Summoner Name:</label>
-    <input type="text" name="summoner_name" id="summoner_name" required>
-    <input type="submit" value="Submit">
-</form>
-</html>
+<body>
+    <h1>Summoner Profile</h1>
+    <form method="POST">
+        <label for="summoner_name">Summoner Name:</label>
+        <input type="text" id="summoner_name" name="summoner_name">
+        <input type="submit" value="Submit">
+    </form>
+    {% if summoner_data %}
+        <p>Summoner Name: {{ summoner_data.name }}</p>
+        <p>Summoner Level: {{ summoner_data.summonerLevel }}</p>
+        <p>Rank: {{ summoner_data.rank }} {{ summoner_data.tier}}</p>
+        <p>Win Rate: {{ win_rate }}%</p>
+        <h2>Champion Statistics:</h2>
+        <ul>
+        {% for champion in champion_mastery_data %}
+            <li>Champion ID: {{ champion.championId }}, Mastery Level: {{ champion.championLevel }}, Mastery Points: {{ champion.championPoints }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+<html>

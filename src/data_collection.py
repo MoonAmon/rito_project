@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import time
 
+
 class ApiFetch:
     """
     Classe responsável por buscar dados da API da Riot Games.
@@ -83,12 +84,27 @@ class ApiFetch:
         """
 
         all_match_data = []
+        wins = 0
+
         for match_id in match_ids:
             match_data = self.fetch_match_data(match_id)
             all_match_data.append(match_data)
-        
-        return all_match_data
+
+            for participant in match_data['info']['participants']:
+                if participant['puuid'] == self.summoner_id:
+                    if participant['win']:
+                        wins += 1dta
+                    break
+        win_rate = wins / len(match_ids) * 100 if match_ids else 0
+
+        return {'match_data': all_match_data, 'win_rate': win_rate}
     
+    def fetch_champion_mastery_data(self):
+        url = f'{self.URL}/lol/champion-mastery/v4/champion-masteries/by-summoner/{self.summoner_id}?api_key={self.apiKey}'
+        response = requests.get(url)
+        return response.json()
+    
+
 class Match:
     """
     Classe que representa uma partida.
