@@ -50,7 +50,6 @@ class ApiFetch:
         print(url)
         response = requests.get(url)
         return response.json()
-
     def fetch_match_data(self, match_id) -> dict:
         """
         Busca os dados de uma partida específica.
@@ -63,7 +62,18 @@ class ApiFetch:
         """
         url = f'{self.URL2}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
         response = requests.get(url)
-        return response.json()
+        data = response.json()
+
+        participant_id = next(participant['participantId'] for participant in data['participantIdentities'] if participant['player']['summonerName'] == self.summoner_name)
+
+        participant_data = next(participant for participant in data['participants'] if participant['participantId'] == participant_id)
+
+        kills = participant_data['stats']['kills']
+        deaths = participant_data['stats']['deaths']
+        assists = participant_data['stats']['assists']
+
+        return {'match_data': data, 'kills': kills, 'deaths': deaths, 'assists': assists}
+
     
     def fetch_summoner_data(self) -> dict:
         url = f'{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}'
@@ -93,9 +103,11 @@ class ApiFetch:
             for participant in match_data['info']['participants']:
                 if participant['puuid'] == self.summoner_id:
                     if participant['win']:
-                        wins += 1dta
+                        wins += 1
                     break
+        print(match_data)
         win_rate = wins / len(match_ids) * 100 if match_ids else 0
+        
 
         return {'match_data': all_match_data, 'win_rate': win_rate}
     

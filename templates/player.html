@@ -15,12 +15,12 @@
         <p>Summoner Level: {{ summoner_data.summonerLevel }}</p>
         <p>Rank: {{ summoner_data.rank }} {{ summoner_data.tier}}</p>
         <p>Win Rate: {{ win_rate }}%</p>
-        <h2>Champion Statistics:</h2>
-        <ul>
-        {% for champion in champion_mastery_data %}
-            <li>Champion ID: {{ champion.championId }}, Mastery Level: {{ champion.championLevel }}, Mastery Points: {{ champion.championPoints }}</li>
-        {% endfor %}
-        </ul>
     {% endif %}
+        <h2>Match Details:</h2>
+            <ul>
+            {% for match in match_details %}
+                <li>Match ID: {{ match.match_data.gameId }}, Kills: {{ match.kills }}, Deaths: {{ match.deaths }}, Assists: {{ match.assists }}</li>
+            {% endfor %}
+        </ul>
 </body>
 <html>

@@ -32,12 +32,10 @@ def summoner_profile(summoner_name):
 
     api_fetch = ApiFetch(summoner_name)
     summoner_data = api_fetch.fetch_summoner_data()
-    match_ids = api_fetch.fetch_match_id(20)
-    all_match_data = api_fetch.fetch_all_match_data(match_ids)
-    champion_mastery_data = api_fetch.fetch_champion_mastery_data()
-    print(champion_mastery_)
+    match_ids = api_fetch.fetch_match_ids(20)  
+    match_details = [api_fetch.fetch_match_data(match_id) for match_id in match_ids]
 
-    return render_template('player.html', summoner_data=summoner_data, match_data=all_match_data['match_data'], win_rate=all_match_data['win_rate'], champion_mastery_data=champion_mastery_data)
+    return render_template('player.html', summoner_data=summoner_data, match_details=match_details)
 
 def serve_layout():
     api_fetch = ApiFetch('puoiaiolam')
