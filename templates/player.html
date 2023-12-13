@@ -2,20 +2,121 @@
 <html>
 
 <head>
-    <title>Summoner Profile</title>
+    <title>Perfil de Invocador</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #3F51B5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            height: 100vh;
+        }
+
+        .summoner-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        img {
+            max-width: 100px;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 300px; /* Ajuste conforme necessário */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .sub-title {
+            color: #ffffff;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Summoner Profile</h1>
-    <p>Summoner Name: {{ summoner_data.name }}</p>
-    <p>Summoner Level: {{ summoner_data.summonerLevel }}</p>
-    <p>Rank: {{ summoner_data.rank }} {{ summoner_data.tier}}</p>
-    <h2>Recent Matches</h2>
-    <table>
-        {% for match in matchs_data %}
-        <tr>
+    <div class="container">
+        <form method="POST">
+            <label for="summoner_name">Nome do invocador</label>
+            <input type="text" name="summoner_name" id="summoner_name" required>
+            <input type="submit" value="Enviar">
+        </form>
+
+        <div class="summoner-card">
+            <h1>Perfil de Invocador</h1>
+            <img src="https://cdn.communitydragon.org/latest/profile-icon/{{summoner_data.profileIconId}}" alt="Ícone">
+            <p>{{ summoner_data.name }}</p>
+            <p>{{ summoner_data.summonerLevel }}</p>
+            <p>{{ summoner_data.tier}} {{ summoner_data.rank }}</p>
+        </div>
+
+        <h2 class="sub-title">Partidas Recentes</h2>
+        <table>
+            {% for match in matchs_data %}
+            <tr>
 
             {% endfor %}
-    </table>
+        </table>
+    </div>
 </body>
 <html>

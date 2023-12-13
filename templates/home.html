@@ -8,17 +8,5 @@
     <label for="summoner_name">Summoner Name:</label>
     <input type="text" name="summoner_name" id="summoner_name" required>
     <input type="submit" value="Submit">
-
-    <h1>Summoner Profile</h1>
-    <p>Summoner Name: {{ summoner_data.name }}</p>
-    <p>Summoner Level: {{ summoner_data.summonerLevel }}</p>
-    <p>Rank: {{ summoner_data.rank }} {{ summoner_data.tier}}</p>
-    <h2>Recent Matches</h2>
-    <table>
-        {% for match in matchs_data %}
-        <tr>
-
-            {% endfor %}
-    </table>
 </form>
 </html>

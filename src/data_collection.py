@@ -33,7 +33,6 @@ class ApiFetch:
         url = f"{self.URL}/lol/summoner/v4/summoners/by-name/{self.summoners_name}?api_key={self.apiKey}"
         response = requests.get(url)
         response = response.json()
-        time.sleep(1)
         return response["puuid"]
 
     def fetch_match_id(self, count=10) -> list:
@@ -49,7 +48,6 @@ class ApiFetch:
         url = f'{self.URL2}/lol/match/v5/matches/by-puuid/{self.summoner_id}/ids?start={0}&count={count}&api_key={self.apiKey}'
         print(url)
         response = requests.get(url)
-        time.sleep(1)
         return response.json()
 
     def fetch_match_data(self, match_id) -> dict:
@@ -64,7 +62,6 @@ class ApiFetch:
         """
         url = f'{self.URL2}/lol/match/v5/matches/{match_id}?api_key={self.apiKey}'
         response = requests.get(url)
-        time.sleep(1)
         return response.json()
     
     def fetch_summoner_data(self) -> dict:
@@ -89,7 +86,6 @@ class ApiFetch:
         for match_id in match_ids:
             match_data = self.fetch_match_data(match_id)
             all_match_data.append(match_data)
-            time.sleep(1)
         
         return all_match_data
     
