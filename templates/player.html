@@ -37,10 +37,11 @@
         }
 
         img {
-            max-width: 100px;
+            max-width: 50px;
             border-radius: 50%;
             margin-top: 10px;
         }
+
 
         p {
             margin: 10px 0;
@@ -58,7 +59,7 @@
             padding: 20px;
             text-align: center;
             width: 300px;
-            /* Ajuste conforme necessário */
+
         }
 
         label {
@@ -92,6 +93,28 @@
         .sub-title {
             color: #ffffff;
         }
+
+  
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 
@@ -105,27 +128,34 @@
         {% if summoner_data %}
         <div class="summoner-card">
             <h1>Perfil de Invocador</h1>
-            <img src="https://cdn.communitydragon.org/latest/profile-icon/{{summoner_data.profileIconId}}" alt="Ícone">
+            <img src="https://cdn.communitydragon.org/latest/profile-icon/{{summoner_data.profileIconId}}" class="summoner_img" alt="Ícone">
             <p>{{ summoner_data.name }}</p>
             <p>{{ summoner_data.summonerLevel }}</p>
-            <p>{{ summoner_data.tier}} {{ summoner_data.rank }}</p>
-            <p>Win Rate: {{ win_rate }}%</p>
-            <h2>Champion Statistics:</h2>
-            <ul>
-                {% for champion in champion_mastery_data %}
-                <li>Champion ID: {{ champion.championId }}, Mastery Level: {{ champion.championLevel }}, Mastery Points:
-                    {{ champion.championPoints }}</li>
-                {% endfor %}
-            </ul>
         </div>
         {% endif %}
         <h2 class="sub-title">Partidas Recentes</h2>
-        <table>
+        <table class="table">
+            <tr>
+                <th>Match ID</th>
+                <th>Champion</th>
+                <th>Champion Icon</th>
+                <th>Kills</th>
+                <th>Deaths</th>
+                <th>Assists</th>
+                <th>KDA</th>
+            </tr>
             {% for match in matchs_data %}
             <tr>
-
-                {% endfor %}
+                <td><a href="{{ url_for('match_details', match_id=match.match_data.metadata.matchId) }}">{{ match.match_data.metadata.matchId }}</a></td>
+                <td>{{ match.champion_name}}</td>
+                <td><img src="https://cdn.communitydragon.org/latest/champion/{{ match.champion_id }}/square" alt="Ícone"></td>
+                <td>{{ match.kills }}</td>
+                <td>{{ match.deaths }}</td>
+                <td>{{ match.assists }}</td>
+                <td>{{ match.kda }}</td>
+            </tr>
+            {% endfor %}
         </table>
     </div>
 </body>
-<html>
+</html>

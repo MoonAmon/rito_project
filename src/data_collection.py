@@ -23,6 +23,7 @@ class ApiFetch:
         self.summoners_name = summoners_name
         self.apiKey = self.KEY
         self.summoner_id = self.fetch_summoner_puuid()
+        self.champion_data = self.fetch_champion_data()
     
     def fetch_summoner_puuid(self) -> str:
         """
@@ -73,8 +74,18 @@ class ApiFetch:
         kills = participant_data['kills']
         deaths = participant_data['deaths']
         assists = participant_data['assists']
+        
+        if deaths == 0:
+            kda = 'Perfect'
+        else:
+            kda = round((kills + assists) / deaths, 2)
 
-        return {'match_data': data, 'kills': kills, 'deaths': deaths, 'assists': assists}
+        champion_id = participant_data['championId']
+        champion_data = self.fetch_champion_data()
+        champion_name = champion_data[str(champion_id)]
+
+
+        return {'match_data': data, 'kills': kills, 'deaths': deaths, 'assists': assists, 'kda': kda, 'champion_name': champion_name, 'champion_id':champion_id}
 
     
     def fetch_summoner_data(self) -> dict:
@@ -118,13 +129,21 @@ class ApiFetch:
         response = requests.get(url)
         return response.json()
     
+    def fetch_champion_data(self):
+        url = f'https://ddragon.leagueoflegends.com/cdn/13.24.1/data/en_US/champion.json'
+        response = requests.get(url)
+        data = response.json()
 
-class Match:
+        champion_data = {champ['key']: champ['name'] for champ in data['data'].values()}
+
+        return champion_data
+
+class Match(ApiFetch):
     """
     Classe que representa uma partida.
     """
 
-    def __init__(self, api_fetch, match_id) -> None:
+    def __init__(self, match_id) -> None:
         """
         Inicializa a classe Match.
 
@@ -133,7 +152,7 @@ class Match:
             match_id (str): O ID da partida.
         """
         self.match_id = match_id
-        self.match_data = api_fetch.fetch_match_data(match_id)
+        self.match_data = self.fetch_match_data()
         self.match_duration = self.match_data['info']['gameDuration']
         self.game_mode = self.match_data['info']['gameMode']
         self.game_version = self.match_data['info']['gameVersion']
@@ -147,6 +166,30 @@ class Match:
             'game_version': self.game_version
         }
 
+    def fetch_match_data(self) -> dict:
+        url = f'{self.URL2}/lol/match/v5/matches/{self.match_id}?api_key={self.KEY}'
+        response = requests.get(url)
+        data = response.json()
+
+        return data
+
+    def fetch_champion_icon(self) -> None:
+        """
+        Busca o ícone do campeão do participante.
+        """
+        version = '13.24.1'
+        url = f'http://ddragon.leagueoflegends.com/cdn/{version}/img/champion/{self.champion_name}.png'
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(f'static/images/{self.champion_name}.png', 'wb') as f:
+                f.write(response.content)
+        else:
+            print(f'Erro ao buscar o ícone para {self.champion_name}: {response.status_code}')
+
+    def fetch_all_champion_icons(self) -> None:
+        for participant in self.participants:
+            self.champion_name = participant['championName']
+            self.fetch_champion_icon()
 
 
 class Participants(Match):

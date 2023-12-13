@@ -1,7 +1,7 @@
 from src.data_collection import Match
 import pandas as pd
 
-class Analytics(Match):
+class Analytics:
     def __init__(self, api_fetch, match_id) -> None:
         """
         Inicializa uma instância da classe Analytics.

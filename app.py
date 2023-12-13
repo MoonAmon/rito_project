@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
-from src.data_collection import Participants, ApiFetch, Summoner
+from src.data_collection import Participants, ApiFetch, Summoner, Match
 from src.data_analysis import Analytics
 import dash
 from dash import dcc, html
@@ -10,7 +10,7 @@ import plotly.express as px
 from flask import send_from_directory
 
 app = Flask(__name__)
-dash_app = dash.Dash(__name__, server=app, url_base_pathname='/dashboard/')
+#dash_app = dash.Dash(__name__, server=app, url_base_pathname='/dashboard/')
 app.debug = True
 
 if __name__ == '__main__':
@@ -23,7 +23,7 @@ def home():
         return redirect(url_for('summoner_profile', summoner_name=summoner_name))
     return render_template('home.html')
 
-@app.route('/player', methods=['GET', 'POST'])
+@app.route('/player/<summoner_name>', methods=['GET', 'POST'])
 def summoner_profile(summoner_name):
 
     if request.method == 'POST':
@@ -32,10 +32,17 @@ def summoner_profile(summoner_name):
 
     api_fetch = ApiFetch(summoner_name)
     summoner_data = api_fetch.fetch_summoner_data()
-    match_ids = api_fetch.fetch_match_ids(20)  
-    match_details = [api_fetch.fetch_match_data(match_id) for match_id in match_ids]
+    match_ids = api_fetch.fetch_match_id(5)  
+    match_details_list = [api_fetch.fetch_match_data(match_id) for match_id in match_ids]
 
-    return render_template('player.html', summoner_data=summoner_data, match_details=match_details)
+    return render_template('player.html', summoner_data=summoner_data, matchs_data=match_details_list, match_ids=match_ids)
+
+@app.route('/match/<match_id>')
+def match_details(match_id):
+    match_data = Match(match_id)
+    participants_data = match_data.participants
+    match_data.fetch_all_champion_icons()
+    return render_template('match.html', participants=participants_data)
 
 #def serve_layout():
     api_fetch = ApiFetch('puoiaiolam')
