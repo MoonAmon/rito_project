@@ -50,6 +50,8 @@ class ApiFetch:
         print(url)
         response = requests.get(url)
         return response.json()
+    
+
     def fetch_match_data(self, match_id) -> dict:
         """
         Busca os dados de uma partida específica.
@@ -64,13 +66,13 @@ class ApiFetch:
         response = requests.get(url)
         data = response.json()
 
-        participant_id = next(participant['participantId'] for participant in data['participantIdentities'] if participant['player']['summonerName'] == self.summoner_name)
+        print(data)
 
-        participant_data = next(participant for participant in data['participants'] if participant['participantId'] == participant_id)
+        participant_data = next((participant for participant in data['info']['participants'] if participant['puuid'] == self.summoner_id), None)
 
-        kills = participant_data['stats']['kills']
-        deaths = participant_data['stats']['deaths']
-        assists = participant_data['stats']['assists']
+        kills = participant_data['kills']
+        deaths = participant_data['deaths']
+        assists = participant_data['assists']
 
         return {'match_data': data, 'kills': kills, 'deaths': deaths, 'assists': assists}
 

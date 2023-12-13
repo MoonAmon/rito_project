@@ -23,7 +23,7 @@ def home():
         return redirect(url_for('summoner_profile', summoner_name=summoner_name))
     return render_template('home.html')
 
-@app.route('/player/<summoner_name>', methods=['GET', 'POST'])
+@app.route('/player', methods=['GET', 'POST'])
 def summoner_profile(summoner_name):
 
     if request.method == 'POST':
@@ -37,7 +37,7 @@ def summoner_profile(summoner_name):
 
     return render_template('player.html', summoner_data=summoner_data, match_details=match_details)
 
-def serve_layout():
+#def serve_layout():
     api_fetch = ApiFetch('puoiaiolam')
     matchs = api_fetch.fetch_match_id()
     match_data = Analytics(api_fetch, matchs[0])
@@ -61,5 +61,5 @@ def serve_layout():
 def send_img(path):
     return send_from_directory('static/images', path)
 
-dash_app.layout = serve_layout
+#dash_app.layout = serve_layout
 
