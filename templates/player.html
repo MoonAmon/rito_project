@@ -4,15 +4,15 @@
 <head>
     <title>Perfil de Invocador</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #3F51B5;
             margin: 0;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
         }
 
         .container {
@@ -30,6 +30,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
+            width: 300px;
         }
 
         h1 {
@@ -41,7 +42,12 @@
             border-radius: 50%;
             margin-top: 10px;
         }
-
+        
+        .summoner_img {
+            border-radius: 0;
+            max-width: 50px;
+            margin-top:10px;
+        }
 
         p {
             margin: 10px 0;
@@ -58,7 +64,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
-            width: 300px;
+            width: 350px;
 
         }
 
@@ -128,7 +134,7 @@
         {% if summoner_data %}
         <div class="summoner-card">
             <h1>Perfil de Invocador</h1>
-            <img src="https://cdn.communitydragon.org/latest/profile-icon/{{summoner_data.profileIconId}}" class="summoner_img" alt="Ícone">
+            <img src="https://cdn.communitydragon.org/latest/profile-icon/{{summoner_data.profileIconId}}" alt="Ícone">
             <p>{{ summoner_data.name }}</p>
             <p>{{ summoner_data.summonerLevel }}</p>
         </div>
@@ -148,7 +154,7 @@
             <tr>
                 <td><a href="{{ url_for('match_details', match_id=match.match_data.metadata.matchId) }}">{{ match.match_data.metadata.matchId }}</a></td>
                 <td>{{ match.champion_name}}</td>
-                <td><img src="https://cdn.communitydragon.org/latest/champion/{{ match.champion_id }}/square" alt="Ícone"></td>
+                <td><img class="summoner_img" src="https://cdn.communitydragon.org/latest/champion/{{ match.champion_id }}/square" alt="Ícone"></td>
                 <td>{{ match.kills }}</td>
                 <td>{{ match.deaths }}</td>
                 <td>{{ match.assists }}</td>
