@@ -57,7 +57,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
-            width: 300px; /* Ajuste conforme necessário */
+            width: 300px;
+            /* Ajuste conforme necessário */
         }
 
         label {
@@ -101,21 +102,29 @@
             <input type="text" name="summoner_name" id="summoner_name" required>
             <input type="submit" value="Enviar">
         </form>
-
+        {% if summoner_data %}
         <div class="summoner-card">
             <h1>Perfil de Invocador</h1>
             <img src="https://cdn.communitydragon.org/latest/profile-icon/{{summoner_data.profileIconId}}" alt="Ícone">
             <p>{{ summoner_data.name }}</p>
             <p>{{ summoner_data.summonerLevel }}</p>
             <p>{{ summoner_data.tier}} {{ summoner_data.rank }}</p>
+            <p>Win Rate: {{ win_rate }}%</p>
+            <h2>Champion Statistics:</h2>
+            <ul>
+                {% for champion in champion_mastery_data %}
+                <li>Champion ID: {{ champion.championId }}, Mastery Level: {{ champion.championLevel }}, Mastery Points:
+                    {{ champion.championPoints }}</li>
+                {% endfor %}
+            </ul>
         </div>
-
+        {% endif %}
         <h2 class="sub-title">Partidas Recentes</h2>
         <table>
             {% for match in matchs_data %}
             <tr>
 
-            {% endfor %}
+                {% endfor %}
         </table>
     </div>
 </body>

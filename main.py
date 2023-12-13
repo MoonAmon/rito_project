@@ -29,20 +29,15 @@ def summoner_profile(summoner_name):
     if request.method == 'POST':
         summoner_name = request.form.get('summoner_name')
 
-        return redirect(url_for('summoner_profile', summoner_name=summoner_name))
-    # Pegando os dados do summoner
-    summoner = Summoner(summoner_name)
-    summoner_data = summoner.summoner_response
-    tier, rank = summoner.fetch_rank()
-    summoner_data['tier'] = tier
-    summoner_data['rank'] = rank
 
-    # Pegando as ultimas partidas do summoner
-    #api_fetch = ApiFetch(summoner_name)
-    #matchs_id = api_fetch.fetch_match_id(10)
-    #matchs_data = api_fetch.fetch_all_match_data(matchs_id)
+    api_fetch = ApiFetch(summoner_name)
+    summoner_data = api_fetch.fetch_summoner_data()
+    match_ids = api_fetch.fetch_match_id(20)
+    all_match_data = api_fetch.fetch_all_match_data(match_ids)
+    champion_mastery_data = api_fetch.fetch_champion_mastery_data()
+    print(champion_mastery_)
 
-    return render_template('player.html', summoner_data=summoner_data)
+    return render_template('player.html', summoner_data=summoner_data, match_data=all_match_data['match_data'], win_rate=all_match_data['win_rate'], champion_mastery_data=champion_mastery_data)
 
 def serve_layout():
     api_fetch = ApiFetch('puoiaiolam')
